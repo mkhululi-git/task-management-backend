@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +18,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/sanctum/csrf-token', function (){
-    return json_encode(csrf_token());
-});
+Route::middleware(['auth:sanctum', 'verified'])->get('/',  [HomeController::class, 'index'])->name('home');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
-Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/boards/{id}/tasks', [BoardController::class, 'tasks']);
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+    Route::patch('/tasks/{id}', [TaskController::class, 'patch_update']);
+
+});

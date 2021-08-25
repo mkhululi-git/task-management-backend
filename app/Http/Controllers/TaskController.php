@@ -136,8 +136,6 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        Auth::loginUsingId(2);
-
         Gate::authorize('delete', Task::find($id));
 
         return Task::destroy($id) ?
